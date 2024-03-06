@@ -5,11 +5,11 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 object Api {
     private const val BASE_URL: String = "https://kgtttq6tg9.execute-api.us-east-2.amazonaws.com/"
-    private const val ENDPOINT: String = "prod/"
+    const val ENDPOINT: String = "prod/"
 
     private val retrofit: Retrofit by lazy {
         Retrofit.Builder()
-            .baseUrl(BASE_URL + ENDPOINT)
+            .baseUrl(BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 

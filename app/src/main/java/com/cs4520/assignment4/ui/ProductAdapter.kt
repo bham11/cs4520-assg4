@@ -10,16 +10,17 @@ import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.cs4520.assignment4.data.Product
 import com.cs4520.assignment4.R
+import com.cs4520.assignment4.databinding.ProductActivityLayoutBinding
 
 
 class ProductAdapter(private val dataSet: List<Product>) :
     RecyclerView.Adapter<ProductAdapter.ViewHolder>() {
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val imageView: ImageView
-        val holder : View
+        val holder: View
         val productName: TextView
-        val date : TextView
-        val price : TextView
+        val date: TextView
+        val price: TextView
 
         init {
             imageView = view.findViewById(R.id.image)
@@ -27,6 +28,7 @@ class ProductAdapter(private val dataSet: List<Product>) :
             date = view.findViewById(R.id.expDate)
             price = view.findViewById(R.id.price)
             holder = view.findViewById(R.id.holder)
+
         }
     }
 
@@ -43,24 +45,33 @@ class ProductAdapter(private val dataSet: List<Product>) :
         // Get element from your dataset at this position and replace the
         // contents of the view with that element
         val product = dataSet[position]
-        viewHolder.productName.text = product.name
-        viewHolder.date.isVisible = false
-        product.expDate?.let {
-            viewHolder.date.text = product.expDate
-            viewHolder.date.isVisible = true
-        }
-        viewHolder.price.text = dataSet[position].price.toString()
-        if(product.type == "Equipment") {
+        if (this.validProduct(product)) {
 
-            viewHolder.holder.setBackgroundColor(Color.parseColor("#E06666"))
-            viewHolder.imageView.setImageResource(R.drawable.equipment)
+            viewHolder.productName.text = product.name
+            viewHolder.date.isVisible = false
+            product.expiryDate?.let {
+                viewHolder.date.text = product.expiryDate
+                viewHolder.date.isVisible = true
+            }
+            viewHolder.price.text = dataSet[position].price.toString()
+            if (product.type == "Equipment") {
 
-        }
-        else {
+                viewHolder.holder.setBackgroundColor(Color.parseColor("#E06666"))
+                viewHolder.imageView.setImageResource(R.drawable.equipment)
+
+            } else {
                 viewHolder.holder.setBackgroundColor(Color.parseColor("#FFD965"))
                 viewHolder.imageView.setImageResource(R.drawable.food)
             }
+
         }
+
+    }
+
+    private fun validProduct(product: Product): Boolean {
+        return product.name.isNotEmpty() && product.type.isNotEmpty() && product.price.isNotEmpty()
+
+    }
 
     override fun getItemCount() = dataSet.size
 

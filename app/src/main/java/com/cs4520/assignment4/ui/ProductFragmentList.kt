@@ -29,44 +29,34 @@ class ProductFragmentList : Fragment(R.layout.product_activity_layout) {
         return binding.root
     }
 
-    private fun buildProductsList(entries: List<List<Any?>>): List<Product> {
-        val finalArray = arrayListOf<Product>()
-
-        for (list in entries) {
-                val setPrice = list[3]
-                val product = Product(
-                    name = list[0].toString(),
-                    type= list[1].toString(),
-                    expDate = list[2]?.toString(),
-                    price = "$$setPrice"
-                )
-                finalArray.add(product)
-            }
-
-        return finalArray
-
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         viewModel = ViewModelProvider(requireActivity())[ProductListViewModel::class.java]
 
-        var dataset = this.buildProductsList(productsDataset)
 
-        val productsAdapter = ProductAdapter(dataset)
+
+
+        val productsAdapter = ProductAdapter(viewModel.productList.value!!)
         val recyclerView: RecyclerView = binding.productRecyclerView
         recyclerView.layoutManager = LinearLayoutManager(context)
 
         recyclerView.adapter = productsAdapter
 
         val productListObserver = Observer<List<Product>> { newProductList ->
-            dataset = newProductList
+            viewModel.productList.value = newProductList
         }
 
         viewModel.productList.observe(viewLifecycleOwner, productListObserver)
 
-        viewModel.getAllProducts()
+
+
+//        if(dataset.isEmpty()) {
+//            val msg = "No products available"
+//            binding.plProgressBar.visibility = View.INVISIBLE
+//            binding.loadingMessage.text = msg
+//        }
 
     }
 

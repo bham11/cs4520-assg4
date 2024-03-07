@@ -1,4 +1,4 @@
-package com.cs4520.assignment4.ui
+package com.cs4520.assignment4.ui.product_list
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,11 +10,9 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 
 import androidx.recyclerview.widget.RecyclerView
-import com.cs4520.assignment4.data.Product
+import com.cs4520.assignment4.model.Product
 import com.cs4520.assignment4.R
 import com.cs4520.assignment4.databinding.ProductActivityLayoutBinding
-import com.cs4520.assignment4.data.productsDataset
-import com.cs4520.assignment4.model.ProductListViewModel
 
 class ProductFragmentList : Fragment(R.layout.product_activity_layout) {
 

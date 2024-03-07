@@ -6,7 +6,7 @@
     app:startDestination="@id/loginFragment">
     <fragment
         android:id="@+id/loginFragment"
-        android:name="com.cs4520.assignment4.ui.LoginFragment"
+        android:name="com.cs4520.assignment4.ui.login.LoginFragment"
         android:label="fragment_login"
         tools:layout="@layout/fragment_login" >
         <action
@@ -15,7 +15,7 @@
     </fragment>
     <fragment
         android:id="@+id/productFragmentList"
-        android:name="com.cs4520.assignment4.ui.ProductFragmentList"
+        android:name="com.cs4520.assignment4.ui.product_list.ProductFragmentList"
         android:label="product_activity_layout"
         tools:layout="@layout/product_activity_layout" >
         <action

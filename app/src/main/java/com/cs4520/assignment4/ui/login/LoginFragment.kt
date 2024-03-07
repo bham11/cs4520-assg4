@@ -1,4 +1,4 @@
-package com.cs4520.assignment4.ui
+package com.cs4520.assignment4.ui.login
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -6,15 +6,19 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.cs4520.assignment4.R
 import com.cs4520.assignment4.databinding.FragmentLoginBinding
-
+import com.cs4520.assignment4.model.User
 
 
 class LoginFragment : Fragment(R.layout.fragment_login) {
 
     private lateinit var binding: FragmentLoginBinding
+    private lateinit var loginViewModel: LoginViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -27,6 +31,26 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        loginViewModel = ViewModelProvider(requireActivity())[LoginViewModel::class.java]
+
+        val loginObserver = Observer<User> { newUser ->
+            //Do something?
+        }
+
+        loginViewModel.user.observe(viewLifecycleOwner, loginObserver)
+
+        this.setEditTextColors()
+        this.setOnClickListener()
+
+
+
+
+
+
+    }
+
+    private fun setEditTextColors() {
         binding.username.setOnClickListener {
             binding.username.setTextColor(R.color.teal_200.toInt())
         }
@@ -35,9 +59,14 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
         binding.password.setOnClickListener {
             binding.password.setTextColor(R.color.teal_200.toInt())
         }
+    }
 
-        binding.loginButton.setOnClickListener(View.OnClickListener {
-            if (binding.username.text.toString() == "admin" && binding.password.text.toString() == "admin") {
+    private fun setOnClickListener() {
+        binding.loginButton.setOnClickListener {
+            loginViewModel.setUser(binding.username.text.toString(),
+                binding.password.text.toString() )
+
+            if (loginViewModel.isUserValid(loginViewModel.user.value)) {
                 // move to the next page
                 Toast.makeText(requireContext(), "Login Successful", Toast.LENGTH_SHORT).show()
                 binding.username.text.clear()
@@ -47,11 +76,10 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
 
 
             } else {
+                binding.username.text.clear()
                 binding.password.text.clear()
                 Toast.makeText(requireContext(), "Login Failed", Toast.LENGTH_SHORT).show()
             }
-        })
-
-
+        }
     }
 }

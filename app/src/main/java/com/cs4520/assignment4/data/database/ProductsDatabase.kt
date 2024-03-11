@@ -5,10 +5,10 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
-import com.cs4520.assignment4.model.Product
 
 
-@Database(entities = [Product::class], version = 1)
+
+@Database(entities = [Products::class], version = 1,exportSchema = false)
 abstract class ProductsDatabase: RoomDatabase() {
     abstract fun productDao(): ProductsDao
 

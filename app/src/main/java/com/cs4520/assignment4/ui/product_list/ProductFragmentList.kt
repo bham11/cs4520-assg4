@@ -12,9 +12,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.cs4520.assignment4.model.Product
 import com.cs4520.assignment4.R
+import com.cs4520.assignment4.data.Api
+import com.cs4520.assignment4.data.ProductRepository
 import com.cs4520.assignment4.databinding.ProductActivityLayoutBinding
 
-class ProductFragmentList : Fragment(R.layout.product_activity_layout) {
+class ProductFragmentList : Fragment() {
 
     private lateinit var binding: ProductActivityLayoutBinding
     private  lateinit var viewModel: ProductListViewModel
@@ -22,7 +24,7 @@ class ProductFragmentList : Fragment(R.layout.product_activity_layout) {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = ProductActivityLayoutBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -31,12 +33,10 @@ class ProductFragmentList : Fragment(R.layout.product_activity_layout) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel = ViewModelProvider(requireActivity())[ProductListViewModel::class.java]
+        viewModel = ViewModelProvider(this)[ProductListViewModel::class.java]
 
 
-
-
-        val productsAdapter = ProductAdapter(viewModel.productList.value!!)
+        val productsAdapter = ProductAdapter(emptyList())
         val recyclerView: RecyclerView = binding.productRecyclerView
         recyclerView.layoutManager = LinearLayoutManager(context)
 
@@ -48,13 +48,13 @@ class ProductFragmentList : Fragment(R.layout.product_activity_layout) {
 
         viewModel.productList.observe(viewLifecycleOwner, productListObserver)
 
+        viewModel.isLoading.observe(viewLifecycleOwner, Observer { loaded ->
+            if(!loaded) {
+                binding.loadingMessage.visibility = View.INVISIBLE
+                binding.plProgressBar.visibility = View.INVISIBLE
+            }
+        })
 
-
-//        if(dataset.isEmpty()) {
-//            val msg = "No products available"
-//            binding.plProgressBar.visibility = View.INVISIBLE
-//            binding.loadingMessage.text = msg
-//        }
 
     }
 

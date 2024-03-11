@@ -52,7 +52,8 @@ class ProductAdapter(private val dataSet: List<Product>) :
                 viewHolder.date.text = product.expiryDate
                 viewHolder.date.isVisible = true
             }
-            viewHolder.price.text = dataSet[position].price.toString()
+            val priceText = "$${product.price}"
+            viewHolder.price.text = priceText
             if (product.type == "Equipment") {
 
                 viewHolder.holder.setBackgroundColor(Color.parseColor("#E06666"))
@@ -68,7 +69,9 @@ class ProductAdapter(private val dataSet: List<Product>) :
     }
 
     private fun validProduct(product: Product): Boolean {
-        return product.name.isNotEmpty() && product.type.isNotEmpty() && product.price.isNotEmpty()
+        return product.name.isNotEmpty()
+                && product.type.isNotEmpty()
+                && product.price.toString().isNotEmpty()
 
     }
 

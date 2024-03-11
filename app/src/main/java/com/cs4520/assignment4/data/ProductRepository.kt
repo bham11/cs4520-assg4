@@ -1,27 +1,25 @@
 package com.cs4520.assignment4.data
 
 
+import android.util.Log
 import com.cs4520.assignment4.model.Product
-import retrofit2.awaitResponse
 
-class ProductRepository {
-    private val apiService = Api.apiService
+class ProductRepository(private val apiService: ApiService) {
+
+//    private val database = ProductsDatabase.getInstance(application)
 
     suspend fun getAllProducts(): List<Product> {
-        return try {
-            val response = apiService.getProducts(1).awaitResponse()
-            if (response.isSuccessful) {
-                val products = response.body() ?: emptyList()
-                products
+        val response = apiService.getProducts(1)
+        if (response.isSuccessful) {
+            return response.body() ?: emptyList()
 
-            } else {
-                emptyList()
+        } else {
+            Log.w("myapp", "Attempting gathering data from Database")
+            throw Exception("Error Getting Products ${response.code()}")
 
-            }
-        } catch (exception: Exception) {
-            val e = exception
-            emptyList()
         }
+
+
     }
 
 

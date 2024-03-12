@@ -1,5 +1,7 @@
 package com.cs4520.assignment4.data
 
+import com.cs4520.assignment4.model.Product
+
 val productsDataset = listOf(
     listOf("Treadmill", "Equipment", null, 32),
     listOf("Banana", "Food", "2024-02-29", 29),
@@ -38,3 +40,17 @@ val productsDataset = listOf(
     listOf("Gymnastic Rings", "Equipment", null, 50),
     listOf("Blackberry", "Food", "2024-05-08", 29),
 )
+
+fun buildProducts(pl: List<List<Any?>>): List<Product> {
+    val final = mutableListOf<Product>()
+    for(product in pl) {
+        val new_product = Product(
+            product[0].toString(),
+            product[1].toString(),
+            product[2].toString(),
+            product[3].toString().toDouble()
+        )
+        final.add(new_product)
+    }
+    return final
+}

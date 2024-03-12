@@ -2,6 +2,7 @@ package com.cs4520.assignment4.data
 
 
 import android.util.Log
+import com.cs4520.assignment4.data.database.ProductsDatabase
 import com.cs4520.assignment4.model.Product
 
 class ProductRepository(private val apiService: ApiService) {
@@ -21,6 +22,10 @@ class ProductRepository(private val apiService: ApiService) {
 
 
     }
+
+//    suspend fun getAllProducts(): List<Product> {
+//        return apiService.getProducts(1)
+//    }
 
 
 }

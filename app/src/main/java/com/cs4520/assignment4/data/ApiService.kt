@@ -9,4 +9,5 @@ interface ApiService {
 
     @GET(Api.ENDPOINT)
     suspend fun getProducts(@Query("page")page: Int): Response<List<Product>>
+
 }

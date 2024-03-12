@@ -7,19 +7,23 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.view.isVisible
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.cs4520.assignment4.model.Product
 import com.cs4520.assignment4.R
+import com.cs4520.assignment4.databinding.ProductActivityLayoutBinding
+import com.cs4520.assignment4.databinding.ProductActivityRowLayoutBinding
 
 
-class ProductAdapter(private val dataSet: List<Product>) :
-    RecyclerView.Adapter<ProductAdapter.ViewHolder>() {
-    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val imageView: ImageView
-        val holder: View
-        val productName: TextView
-        val date: TextView
-        val price: TextView
+class ProductAdapter(private var dataSet: List<Product>) :
+    RecyclerView.Adapter<ProductAdapter.ProductViewHolder>() {
+    class ProductViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        private val imageView: ImageView
+        private val holder: View
+        private val productName: TextView
+        private val date: TextView
+        private val price: TextView
 
         init {
             imageView = view.findViewById(R.id.image)
@@ -29,52 +33,57 @@ class ProductAdapter(private val dataSet: List<Product>) :
             holder = view.findViewById(R.id.holder)
 
         }
+        fun bind(product: Product) {
+            if (this.validProduct(product)) {
+
+                productName.text = product.name
+                date.isVisible = false
+                product.expiryDate?.let {
+                    date.text = product.expiryDate
+                    date.isVisible = true
+                }
+                val priceText = "$${product.price}"
+                price.text = priceText
+                if (product.type == "Equipment") {
+
+                    holder.setBackgroundColor(Color.parseColor("#E06666"))
+                    imageView.setImageResource(R.drawable.equipment)
+
+                } else {
+                    holder.setBackgroundColor(Color.parseColor("#FFD965"))
+                    imageView.setImageResource(R.drawable.food)
+                }
+
+            }
+        }
+        private fun validProduct(product: Product): Boolean {
+            return product.name.isNotEmpty()
+                    && product.type.isNotEmpty()
+                    && product.price.toString().isNotEmpty()
+
+        }
     }
 
     // Create new views (invoked by the layout manager)
-    override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ViewHolder {
+    override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ProductViewHolder {
         val view = LayoutInflater.from(viewGroup.context)
             .inflate(R.layout.product_activity_row_layout, viewGroup, false)
 
-        return ViewHolder(view)
+        return ProductViewHolder(view)
     }
 
     // Replace the contents of a view (invoked by the layout manager)
-    override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
-        // Get element from your dataset at this position and replace the
-        // contents of the view with that element
+    override fun onBindViewHolder(viewHolder: ProductViewHolder, position: Int) {
         val product = dataSet[position]
-        if (this.validProduct(product)) {
-
-            viewHolder.productName.text = product.name
-            viewHolder.date.isVisible = false
-            product.expiryDate?.let {
-                viewHolder.date.text = product.expiryDate
-                viewHolder.date.isVisible = true
-            }
-            val priceText = "$${product.price}"
-            viewHolder.price.text = priceText
-            if (product.type == "Equipment") {
-
-                viewHolder.holder.setBackgroundColor(Color.parseColor("#E06666"))
-                viewHolder.imageView.setImageResource(R.drawable.equipment)
-
-            } else {
-                viewHolder.holder.setBackgroundColor(Color.parseColor("#FFD965"))
-                viewHolder.imageView.setImageResource(R.drawable.food)
-            }
-
-        }
-
-    }
-
-    private fun validProduct(product: Product): Boolean {
-        return product.name.isNotEmpty()
-                && product.type.isNotEmpty()
-                && product.price.toString().isNotEmpty()
+        viewHolder.bind(product)
 
     }
 
     override fun getItemCount() = dataSet.size
+    fun updateData(newProductList: List<Product>) {
+        dataSet = newProductList
+        this.notifyDataSetChanged()
+
+    }
 
 }

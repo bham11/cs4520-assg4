@@ -14,6 +14,8 @@ import com.cs4520.assignment4.model.Product
 import com.cs4520.assignment4.R
 import com.cs4520.assignment4.data.Api
 import com.cs4520.assignment4.data.ProductRepository
+import com.cs4520.assignment4.data.buildProducts
+import com.cs4520.assignment4.data.productsDataset
 import com.cs4520.assignment4.databinding.ProductActivityLayoutBinding
 
 class ProductFragmentList : Fragment() {
@@ -33,27 +35,27 @@ class ProductFragmentList : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel = ViewModelProvider(this)[ProductListViewModel::class.java]
+//        viewModel = ViewModelProvider(this)[ProductListViewModel::class.java]
 
 
-        val productsAdapter = ProductAdapter(emptyList())
+        val productsAdapter = ProductAdapter(buildProducts(productsDataset))
         val recyclerView: RecyclerView = binding.productRecyclerView
         recyclerView.layoutManager = LinearLayoutManager(context)
 
         recyclerView.adapter = productsAdapter
 
-        val productListObserver = Observer<List<Product>> { newProductList ->
-            viewModel.productList.value = newProductList
-        }
+//        val productListObserver = Observer<List<Product>> { newProductList ->
+//            productsAdapter.updateData(newProductList)
+//        }
 
-        viewModel.productList.observe(viewLifecycleOwner, productListObserver)
+//        viewModel.productList.observe(viewLifecycleOwner, productListObserver)
 
-        viewModel.isLoading.observe(viewLifecycleOwner, Observer { loaded ->
-            if(!loaded) {
-                binding.loadingMessage.visibility = View.INVISIBLE
-                binding.plProgressBar.visibility = View.INVISIBLE
-            }
-        })
+//        viewModel.isLoading.observe(viewLifecycleOwner, Observer { loaded ->
+//            if(loaded) {
+//                binding.loadingMessage.visibility = View.INVISIBLE
+//                binding.plProgressBar.visibility = View.INVISIBLE
+//            }
+//        })
 
 
     }

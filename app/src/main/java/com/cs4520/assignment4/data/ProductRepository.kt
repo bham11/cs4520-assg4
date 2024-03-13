@@ -16,24 +16,23 @@ class ProductRepository(val productDao: ProductsDao) {
 
 
     suspend fun getAllProducts(): List<Product> {
+        var productList = listOf<Product>()
         try {
 
             val response = apiService.getProducts(null)
             if (response.isSuccessful) {
 
-                val productList = this.filterValidProducts(response.body()?: emptyList())
+                productList = this.filterValidProducts(response.body()?: emptyList())
                 this.insertProductList(productList)
                 return productList
-
-            } else {
-                Log.e("ProductRepository", "Failed to fetch products ${response.code()}")
-                // fetch products from database when offline?
-                val dbProducts = productDao.getAllProducts()
-                return convertToProductList(dbProducts)
 
             }
         } catch (ex: Exception) {
             Log.e("ProductRepository", "Error getting products", ex)
+        }
+        if (productList.isEmpty()){
+            val dbProducts = productDao.getAllProducts()
+            return convertToProductList(dbProducts)
         }
         return emptyList()
     }
@@ -46,6 +45,8 @@ class ProductRepository(val productDao: ProductsDao) {
     }
 
     private fun insertProductList(productList: List<Product>) {
+        // clean db first
+        productDao.deleteAllProducts()
         for(product in productList) {
             productDao.insert(product.toProducts())
         }

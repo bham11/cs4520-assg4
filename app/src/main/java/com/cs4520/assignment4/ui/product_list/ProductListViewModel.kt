@@ -4,29 +4,32 @@ package com.cs4520.assignment4.ui.product_list
 
 import android.app.Application
 import android.util.Log
-import android.widget.Toast
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.cs4520.assignment4.data.Api
 import com.cs4520.assignment4.model.Product
 import com.cs4520.assignment4.data.ProductRepository
-import com.cs4520.assignment4.model.isValidProduct
+import com.cs4520.assignment4.data.database.ProductsDatabase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 
-class ProductListViewModel(): ViewModel() {
+class ProductListViewModel(app: Application): AndroidViewModel(app) {
 
-    private val productRepo = ProductRepository()
+    private val productRepo : ProductRepository
 
     private var isLoaded = MutableLiveData<Boolean>().apply { value = false }
 
     private val productList = MutableLiveData<List<Product>>()
 
     private val errorMsg = MutableLiveData<String>()
+
+    init {
+        val dao = ProductsDatabase.getInstance(app).productDao()
+        productRepo = ProductRepository(dao)
+    }
 
 
     fun fetchProducts() {
@@ -39,7 +42,7 @@ class ProductListViewModel(): ViewModel() {
                     productRepo.getAllProducts()
                 }
 
-                productList.value = filterValidProducts(products)
+                productList.value = products
 
             }
             catch(e: Exception) {
@@ -66,14 +69,4 @@ class ProductListViewModel(): ViewModel() {
         return errorMsg
     }
 
-    private fun filterValidProducts(productList: List<Product>): List<Product> {
-        val productListCopy = productList.toList()
-        productListCopy.filter { it.isValidProduct() }
-        productListCopy.toSet()
-        return productListCopy.toList()
-
-
-
-
-    }
 }

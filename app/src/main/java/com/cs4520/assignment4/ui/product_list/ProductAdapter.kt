@@ -16,8 +16,10 @@ import com.cs4520.assignment4.databinding.ProductActivityLayoutBinding
 import com.cs4520.assignment4.databinding.ProductActivityRowLayoutBinding
 
 
-class ProductAdapter(private var dataSet: List<Product>) :
+class ProductAdapter :
     RecyclerView.Adapter<ProductAdapter.ProductViewHolder>() {
+
+    private var dataSet: List<Product> = arrayListOf()
     class ProductViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         private val imageView: ImageView
         private val holder: View
@@ -82,7 +84,7 @@ class ProductAdapter(private var dataSet: List<Product>) :
     override fun getItemCount() = dataSet.size
     fun updateData(newProductList: List<Product>) {
         dataSet = newProductList
-        this.notifyDataSetChanged()
+        notifyDataSetChanged()
 
     }
 

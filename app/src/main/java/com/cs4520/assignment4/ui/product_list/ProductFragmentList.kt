@@ -1,27 +1,27 @@
 package com.cs4520.assignment4.ui.product_list
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 
-import androidx.recyclerview.widget.RecyclerView
-import com.cs4520.assignment4.model.Product
-import com.cs4520.assignment4.R
-import com.cs4520.assignment4.data.Api
-import com.cs4520.assignment4.data.ProductRepository
-import com.cs4520.assignment4.data.buildProducts
-import com.cs4520.assignment4.data.productsDataset
+
 import com.cs4520.assignment4.databinding.ProductActivityLayoutBinding
+import com.cs4520.assignment4.model.Product
+
 
 class ProductFragmentList : Fragment() {
 
     private lateinit var binding: ProductActivityLayoutBinding
     private  lateinit var viewModel: ProductListViewModel
+
+    private lateinit var productAdapter: ProductAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -34,32 +34,60 @@ class ProductFragmentList : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        Log.d("PLFragment", "I am logging")
 
-//        viewModel = ViewModelProvider(this)[ProductListViewModel::class.java]
+        viewModel = ViewModelProvider(this)[ProductListViewModel::class.java]
 
 
-        val productsAdapter = ProductAdapter(buildProducts(productsDataset))
-        val recyclerView: RecyclerView = binding.productRecyclerView
-        recyclerView.layoutManager = LinearLayoutManager(context)
 
-        recyclerView.adapter = productsAdapter
+        productAdapter = ProductAdapter()
+        binding.productRecyclerView.apply {
+            layoutManager = LinearLayoutManager(requireContext())
+            adapter = productAdapter
+        }
 
-//        val productListObserver = Observer<List<Product>> { newProductList ->
-//            productsAdapter.updateData(newProductList)
-//        }
 
-//        viewModel.productList.observe(viewLifecycleOwner, productListObserver)
+        val productListObserver = Observer<List<Product>> { newProductList ->
+            productAdapter.updateData(newProductList)
+            Toast.makeText(context, newProductList.size.toString(), Toast.LENGTH_LONG).show()
 
-//        viewModel.isLoading.observe(viewLifecycleOwner, Observer { loaded ->
-//            if(loaded) {
-//                binding.loadingMessage.visibility = View.INVISIBLE
-//                binding.plProgressBar.visibility = View.INVISIBLE
-//            }
-//        })
+        }
+
+        viewModel.getProductList().observe(viewLifecycleOwner, productListObserver)
+//
+        viewModel.getIsLoading().observe(viewLifecycleOwner) { loaded ->
+            if (loaded) {
+                this.displayProductMessage()
+            }
+        }
+
+        viewModel.getErrorMessage().observe(viewLifecycleOwner) {msg ->
+            binding.loadingMessage.visibility = View.VISIBLE
+            binding.loadingMessage.text = msg
+//            Toast.makeText(context, msg, Toast.LENGTH_LONG).show()
+
+        }
+//
+        viewModel.fetchProducts()
+
+
+
+
 
 
     }
 
+    private fun displayProductMessage() {
+        if(viewModel.getProductList().value?.isEmpty() == true) {
+            val noProducts = "No products available :("
+            binding.loadingMessage.visibility = View.VISIBLE
+            binding.loadingMessage.text = noProducts
+        }
+        else {
+            binding.loadingMessage.visibility = View.INVISIBLE
 
+        }
+        binding.plProgressBar.visibility = View.INVISIBLE
+    }
 
 }

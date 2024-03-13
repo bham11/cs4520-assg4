@@ -1,5 +1,6 @@
 package com.cs4520.assignment4.model
 
+import com.cs4520.assignment4.data.database.Products
 import com.google.gson.annotations.SerializedName
 
 data class Product (
@@ -13,6 +14,10 @@ data class Product (
     val price : Double,
 
 )
+
+fun Product.toProducts(): Products {
+    return Products(this.name,this.type,this.expiryDate, this.price,0)
+}
 
 
 

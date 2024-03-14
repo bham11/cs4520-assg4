@@ -1,11 +1,10 @@
 package com.cs4520.assignment4.data
 
 
-import android.app.Application
+
 import android.util.Log
 import com.cs4520.assignment4.data.database.Products
 import com.cs4520.assignment4.data.database.ProductsDao
-import com.cs4520.assignment4.data.database.ProductsDatabase
 import com.cs4520.assignment4.data.database.toProduct
 import com.cs4520.assignment4.model.Product
 import com.cs4520.assignment4.model.isValidProduct
@@ -23,8 +22,13 @@ class ProductRepository(val productDao: ProductsDao) {
             if (response.isSuccessful) {
 
                 val productList = this.filterValidProducts(response.body() ?: emptyList())
-                this.insertProductList(productList)
-                return productList
+                if (productList.isEmpty()){
+                    return emptyList()
+                }
+                else {
+                    this.insertProductList(productList)
+                    return convertToProductList(productDao.getAllProducts())
+                }
 
             }
             else {
@@ -39,6 +43,7 @@ class ProductRepository(val productDao: ProductsDao) {
             return convertToProductList(dbProducts)
 
         }
+
 
 
     }

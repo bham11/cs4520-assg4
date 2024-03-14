@@ -7,11 +7,10 @@ import com.cs4520.assignment4.model.Product
 
 @Entity(tableName = "products_table")
 data class Products(
-    val name: String,
+    @PrimaryKey val name: String,
     val type: String,
     val expiryDate: String?,
     val price : Double,
-    @PrimaryKey(autoGenerate = true) val id : Int
 )
 
 fun Products.toProduct(): Product {

@@ -34,7 +34,6 @@ class ProductFragmentList : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Log.d("PLFragment", "I am logging")
 
         viewModel = ViewModelProvider(this)[ProductListViewModel::class.java]
 
@@ -54,7 +53,6 @@ class ProductFragmentList : Fragment() {
         }
 
         viewModel.getProductList().observe(viewLifecycleOwner, productListObserver)
-//
         viewModel.getIsLoading().observe(viewLifecycleOwner) { loaded ->
             if (loaded) {
                 this.displayProductMessage()
@@ -62,12 +60,10 @@ class ProductFragmentList : Fragment() {
         }
 
         viewModel.getErrorMessage().observe(viewLifecycleOwner) {msg ->
-            binding.loadingMessage.visibility = View.VISIBLE
-            binding.loadingMessage.text = msg
-//            Toast.makeText(context, msg, Toast.LENGTH_LONG).show()
+            binding.errorMessage.visibility = View.VISIBLE
+            binding.errorMessage.text = msg
 
         }
-//
         viewModel.fetchProducts()
 
 
@@ -82,6 +78,7 @@ class ProductFragmentList : Fragment() {
             val noProducts = "No products available :("
             binding.loadingMessage.visibility = View.VISIBLE
             binding.loadingMessage.text = noProducts
+            binding.errorMessage.visibility = View.INVISIBLE
         }
         else {
             binding.loadingMessage.visibility = View.INVISIBLE

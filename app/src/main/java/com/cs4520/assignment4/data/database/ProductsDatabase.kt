@@ -8,7 +8,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 
 
 
-@Database(entities = [Products::class], version = 1,exportSchema = false)
+@Database(entities = [Products::class], version = 2,exportSchema = false)
 abstract class ProductsDatabase: RoomDatabase() {
     abstract fun productDao(): ProductsDao
 

@@ -16,12 +16,10 @@ data class Product (
 )
 
 fun Product.toProducts(): Products {
-    return Products(this.name,this.type,this.expiryDate, this.price,0)
+    return Products(this.name,this.type,this.expiryDate, this.price)
 }
 
 fun Product.isValidProduct(): Boolean {
-    // whole product not shown?
-    //Products in json can have empty or missing data. This should not be shown on UI.
     return name.isNotEmpty() && type.isNotEmpty() && price.toString().isNotEmpty()
 }
 

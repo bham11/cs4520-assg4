@@ -47,7 +47,6 @@ class ProductFragmentList : Fragment() {
 
         val productListObserver = Observer<List<Product>> { newProductList ->
             productAdapter.updateData(newProductList)
-            Toast.makeText(context, newProductList.size.toString(), Toast.LENGTH_LONG).show()
 
         }
 

@@ -34,11 +34,8 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
 
         loginViewModel = ViewModelProvider(requireActivity())[LoginViewModel::class.java]
 
-        val loginObserver = Observer<User> { newUser ->
-            //Do something?
-        }
 
-        loginViewModel.user.observe(viewLifecycleOwner, loginObserver)
+
 
         this.setEditTextColors()
         this.setOnClickListener()
